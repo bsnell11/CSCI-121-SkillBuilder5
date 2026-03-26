@@ -10,8 +10,7 @@ import java.util.Map;
  *  @version (0.1)
  */
 
-public class Grok
-{
+public class Grok {
     // ---------------------------------------------------------------
     // Nested enum — the four FSM states
     // ---------------------------------------------------------------
@@ -25,8 +24,7 @@ public class Grok
      *   <li>DEFEATED – power level &le; 0; the Grok can no longer act.</li>
      * </ul>
      */
-    public enum GrokState
-    {
+    public enum GrokState {
         DORMANT,
         ACTIVE,
         WEAKENED,
@@ -37,14 +35,16 @@ public class Grok
     // Class (static) constants
     // ---------------------------------------------------------------
 
-    /** Default power level assigned by the no-argument constructor. */
+    /**
+     * Default power level assigned by the no-argument constructor.
+     */
     public static final int DEFAULT_POWER_LEVEL = 0;
 
     // ---------------------------------------------------------------
     // Instance fields
     // ---------------------------------------------------------------
 
-    private int       powerLevel;
+    private int powerLevel;
     private GrokState state;
 
     // ---------------------------------------------------------------
@@ -54,22 +54,21 @@ public class Grok
     /**
      * Initializes a Grok object to the default power level of 0.
      */
-    public Grok()
-    {
+    public Grok() {
         this.powerLevel = DEFAULT_POWER_LEVEL;
-        this.state      = GrokState.DORMANT;
+        this.state = GrokState.DORMANT;
     }
 
     /**
      * Initializes a Grok object to power powerLevel.
+     *
      * @param powerLevel the initial power level for this Grok.
      */
-    public Grok(int powerLevel)
-    {
+    public Grok(int powerLevel) {
         // Do not allow the powerLevel to be set so that
         // it is less than the MIN_POWER_LEVEL
 
-        powerLevel = powerLevel < DEFAULT_POWER_LEVEL ? DEFAULT_POWER_LEVEL: powerLevel;
+        powerLevel = powerLevel < DEFAULT_POWER_LEVEL ? DEFAULT_POWER_LEVEL : powerLevel;
         this.powerLevel = powerLevel;
         this.state = GrokState.DORMANT;
     }
@@ -82,8 +81,7 @@ public class Grok
      * Returns the power level of this Grok.
      * @return returns the power level of this Grok
      */
-    public int getPowerLevel()
-    {
+    public int getPowerLevel() {
         return powerLevel;
     }
 
@@ -91,36 +89,33 @@ public class Grok
      * Returns true if this Grok is in a dormant state; false otherwise.
      * @return true if this Grok is in a dormant state; false otherwise.
      */
-    public boolean isDormant()
-    {
-        // TODO: replace this line with your code.
+    public boolean isDormant() {
+
+        return state == GrokState.DORMANT;
     }
 
     /*
      * Returns true if this Grok is in a weakened state; false otherwise.
      * @return true if this Grok is in a weakened state; false otherwise.
      */
-    public boolean isWeakened()
-    {
-        // TODO: replace this line with your code.
+    public boolean isWeakened() {
+        return state == GrokState.WEAKENED;
     }
 
     /*
      * Returns true if this Grok is in an active state; false otherwise.
      * @return true if this Grok is in an active state; false otherwise.
      */
-    public boolean isActive()
-    {
-        // TODO: replace this line with your code.
+    public boolean isActive() {
+        return state == GrokState.ACTIVE;
     }
 
     /*
      * Returns true if this Grok is in a defeated state; false otherwise.
      * @return true if this Grok is in a defeated state; false otherwise.
      */
-    public boolean isDefeated()
-    {
-        // TODO: replace this line with your code.
+    public boolean isDefeated() {
+        return state == GrokState.DEFEATED;
     }
 
     // ---------------------------------------------------------------
@@ -131,8 +126,7 @@ public class Grok
      * Sets the power level of this Grok.
      * @param powerLevel the power value to set for this Grok.
      */
-    public void setPowerLevel(int powerLevel)
-    {
+    public void setPowerLevel(int powerLevel) {
         this.powerLevel = powerLevel < 0 ? 0 : powerLevel;
     }
 
@@ -143,9 +137,20 @@ public class Grok
      * If the Grok is DEFEATED, this method has no effect.
      * @param pill The PowerPill that this Grok ingests.
      */
-    public void takePowerPill(PowerPill pill)
-    {
-        // TODO: replace this line with your code.
+    public void takePowerPill(PowerPill pill) {
+        if (state == GrokState.DEFEATED) {
+            return;
+        }
+        int pillPower = pill.getPower();
+        powerLevel = powerLevel + pillPower;
+
+        if (powerLevel >= 20) {
+            state = GrokState.ACTIVE;
+        } else {
+            if (powerLevel > 0) {
+                state = GrokState.WEAKENED;
+            }
+        }
     }
 
     /*
@@ -156,8 +161,22 @@ public class Grok
      * a Grok in ACTIVE has at least 20 power and a single hit
      * reduces power by only 5.
      */
-    public void tookHit()
-    {
-        // TODO: replace this line with your code.
+    public void tookHit() {
+        if (state == GrokState.DEFEATED) {
+            return;
+        }
+
+        powerLevel = powerLevel - 5;
+
+        if (powerLevel <= 0) {
+            state = GrokState.DEFEATED;
+        } else {
+            if (powerLevel < 20) {
+                state = GrokState.WEAKENED;
+            } else {
+                state = GrokState.ACTIVE;
+            }
+        }
     }
 }
+
