@@ -165,8 +165,10 @@ public class Grok {
         if (state == GrokState.DEFEATED) {
             return;
         }
-
-        powerLevel = powerLevel - 5;
+        if (state == GrokState.DORMANT){
+            return;
+        }
+        powerLevel = (powerLevel - 5);
 
         if (powerLevel <= 0) {
             state = GrokState.DEFEATED;
